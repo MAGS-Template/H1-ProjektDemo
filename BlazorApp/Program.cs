@@ -1,4 +1,5 @@
 using BlazorApp.Components;
+using Domain_Models;
 
 namespace BlazorApp
 {
@@ -7,6 +8,9 @@ namespace BlazorApp
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            builder.Services.AddSingleton<List<Vehicle>>(sp => new CreateVehicles().CreateListOfCars());
+
 
             // Add services to the container.
             builder.Services.AddRazorComponents()

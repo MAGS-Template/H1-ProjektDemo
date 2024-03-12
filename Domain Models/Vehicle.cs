@@ -2,6 +2,9 @@
 {
     public abstract class Vehicle
     {
+        public uint Id { get; set; }
+        private static uint lastId = 0;
+        public string Url { get; set; }
         public string brand { get; set; }
         public string model { get; set; }
         public int year { get; set; }
@@ -9,6 +12,8 @@
         public int hoursePower { get;  set; }
         public Vehicle(string brand, string model, int year, string color, int hoursePower)
         {
+            this.Url = $"car/{lastId}";
+            Id = lastId++;
             this.brand = brand;
             this.model = model;
             this.year = year;

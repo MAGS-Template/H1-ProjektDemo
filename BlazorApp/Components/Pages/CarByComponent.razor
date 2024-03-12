@@ -1,7 +1,7 @@
 ﻿@page "/car1/{carId}"
-@using Domain_Models
+@inject List<Vehicle> allCars
 
-<PageTitle>Car 1</PageTitle>
+<PageTitle>Car @carId</PageTitle>
 
 @if (carToShow is EVCar evCar )
 {
@@ -13,7 +13,6 @@ else if (carToShow is PetrolCar petrolCar)
 }
 
 @code {
-    List<Vehicle> allCars = new CreateVehicles().CreateListOfCars();
     [Parameter]
     public string carId { get; set; }
     public Vehicle carToShow;

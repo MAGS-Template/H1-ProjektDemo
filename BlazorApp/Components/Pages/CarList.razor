@@ -1,26 +1,54 @@
-﻿@page "/car/{carId}"
-@using Domain_Models
+﻿@page "/"
+@inject List<Vehicle> allCars
 
 <PageTitle>Car</PageTitle>
 
-<h1>Car</h1>
+<h1>CarListings we have @carsToShow.Count cars in our system!</h1>
 
-<div>
-    <hr />
-    <p>This vehicle is from the great brand of <span style="color: red;">@CarToShow.brand</span>.</p>
-    <p>It is their model: <span style="color: red;">@CarToShow.model</span>.</p>
-    <p>Made in the year <span style="color: red;">@CarToShow.year</span>.</p>
-    <p>The <span style="color: red;">@CarToShow.color</span> exterior matches well with its <span style="color: red;">@CarToShow.hoursePower</span> number of horsepowers.</p>
-</div>
+<select @bind="SelectedColor" class="form-select">
+    <option value="">Select a color</option>
+    <option value="red">Red</option>
+    <option value="green">Green</option>
+    <option value="blue">Blue</option>
+    <option value="black">Black</option>
+</select>
+<br />
+
+<button class="btn btn-primary" @onclick="() => FilterAndUpdateCars()">Click me</button>
+
+<br />
+<br />
+
+@foreach (Vehicle car in carsToShow)
+{
+    <CarCard vehicle="car"> </CarCard>
+}
 
 @code {
-    List<Vehicle> allCars = new CreateVehicles().CreateListOfCars();
-    [Parameter] 
-    public string carId { get; set; }
-    public Vehicle CarToShow;
+    public string SelectedColor;
+
+    public List<Vehicle> carsToShow;
 
     protected override void OnInitialized()
     {
-        CarToShow = allCars[Int32.Parse(carId)];
+        carsToShow = allCars;
+    }
+
+    public void FilterAndUpdateCars()
+    {
+        carsToShow = FilterColor(allCars, SelectedColor);
+    }
+
+    public List<Vehicle> FilterColor(List<Vehicle> allCars, string colorFilter)
+    {
+        if (colorFilter != "")
+        {
+            carsToShow = allCars.Where(car => car.color.ToUpper() == colorFilter.ToUpper()).ToList();
+        } else
+        {
+            carsToShow = allCars;
+        }
+
+        return carsToShow;
     }
 }

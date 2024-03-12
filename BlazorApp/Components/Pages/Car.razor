@@ -1,12 +1,25 @@
-﻿@page "/car"
-@using Domain_Models
+﻿@page "/car/{carId}"
 
 <PageTitle>Car</PageTitle>
 
-<h1>CarListings</h1>
+<h1>Car</h1>
 
-
+<div>
+    <hr />
+    <p>This vehicle is from the great brand of <span style="color: red;">@CarToShow.brand</span>.</p>
+    <p>It is their model: <span style="color: red;">@CarToShow.model</span>.</p>
+    <p>Made in the year <span style="color: red;">@CarToShow.year</span>.</p>
+    <p>The <span style="color: red;">@CarToShow.color</span> exterior matches well with its <span style="color: red;">@CarToShow.hoursePower</span> number of horsepowers.</p>
+</div>
 
 @code {
     List<Vehicle> allCars = new CreateVehicles().CreateListOfCars();
+    [Parameter]
+    public string carId { get; set; }
+    public Vehicle CarToShow;
+
+    protected override void OnInitialized()
+    {
+        CarToShow = allCars[Int32.Parse(carId)];
+    }
 }
