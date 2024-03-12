@@ -1,0 +1,23 @@
+﻿@using Domain_Models
+
+<div class="card">
+    <div class="card-body">
+        <div class="card-content">
+            <h5 class="card-title">Brand: @carToShow.brand</h5>
+            <h5 class="card-title">Model: @carToShow.model</h5>
+            <h5 class="card-title">Year: @carToShow.year</h5>
+            <h5 class="card-title">Color: @carToShow.color</h5>
+            <h5 class="card-title">Horse Power: @carToShow.hoursePower</h5>
+            <h5 class="card-title">Number of Cylinders: @carToShow.numberOfCylinders</h5>
+            <div class="name-container">
+                <p class="first-name">Number of Doors: @carToShow.numberOfDoors</p>
+                <p class="last-name">Additional Equipment: @string.Join(", ", carToShow.listOfAdditionalEquipment ?? new List<string>())</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public PetrolCar carToShow { get; set; }
+}

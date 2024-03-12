@@ -1,0 +1,25 @@
+﻿@page "/car1/{carId}"
+@using Domain_Models
+
+<PageTitle>Car 1</PageTitle>
+
+@if (carToShow is EVCar evCar )
+{
+    <EVCarPage evCar="evCar"> </EVCarPage>
+}
+else if (carToShow is PetrolCar petrolCar)
+{
+    <PetrolCarPage carToShow="petrolCar"> </PetrolCarPage>
+}
+
+@code {
+    List<Vehicle> allCars = new CreateVehicles().CreateListOfCars();
+    [Parameter]
+    public string carId { get; set; }
+    public Vehicle carToShow;
+
+    protected override void OnInitialized()
+    {
+        carToShow = allCars[Int32.Parse(carId)];
+    }
+}

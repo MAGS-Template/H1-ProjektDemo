@@ -1,0 +1,12 @@
+﻿@page "/car"
+@using Domain_Models
+
+<PageTitle>Car</PageTitle>
+
+<h1>CarListings</h1>
+
+
+
+@code {
+    List<Vehicle> allCars = new CreateVehicles().CreateListOfCars();
+}
