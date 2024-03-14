@@ -1,0 +1,35 @@
+﻿@page "/carousel"
+
+<PageTitle>Carousel</PageTitle>
+
+<h1>Carousel</h1>
+
+<button @onclick="PreviousImage">Previous</button>
+<button @onclick="NextImage">Next</button>
+
+<div class="carousel">
+    @for (var i = 0; i < images.Length; i++) {
+        var path = $"/assets/280SL/{i}.webp";
+        <div class="carousel-item @(currentIndex == i ? "active" : "")">
+            <img src="@path" alt="Image @i" />
+        </div>
+
+    }
+</div>
+
+
+@code {
+    private int index = 0;
+    private int currentIndex = 0;
+    private string[] images = new string[] { "0.webp", "1.webp", "2.webp", "3.webp", "4.webp", "5.webp", "6.webp","7.webp","8.webp","9.webp","10.webp" };
+
+    private void NextImage()
+    {
+        currentIndex = (currentIndex + 1) % images.Length;
+    }
+
+    private void PreviousImage()
+    {
+        currentIndex = (currentIndex - 1 + images.Length) % images.Length;
+    }
+}
