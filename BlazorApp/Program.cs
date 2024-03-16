@@ -1,5 +1,7 @@
 using BlazorApp.Components;
+using BlazorApp.Services;
 using Domain_Models;
+using Microsoft.Extensions.Configuration;
 
 namespace BlazorApp
 {
@@ -9,7 +11,10 @@ namespace BlazorApp
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddSingleton<List<Vehicle>>(sp => new CreateVehicles().CreateListOfCars());
+            //GetAllCars from the Postgres DB
+            IConfiguration Configuration = builder.Configuration;
+            var connectionString = Configuration.GetConnectionString("DefaultConnection");
+            builder.Services.AddSingleton<List<Vehicle>>(sp => new DatabaseService(connectionString).GetAllVehicles());
 
 
             // Add services to the container.

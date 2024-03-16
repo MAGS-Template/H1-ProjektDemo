@@ -1,6 +1,4 @@
 ﻿@page "/"
-@using Npgsql
-@inject IConfiguration Configuration
 @inject List<Vehicle> allCars
 
 <PageTitle>Car</PageTitle>
@@ -34,7 +32,6 @@
 
     protected override void OnInitialized()
     {
-        connectionString = Configuration.GetConnectionString("DefaultConnection");
         carsToShow = allCars;
     }
 
