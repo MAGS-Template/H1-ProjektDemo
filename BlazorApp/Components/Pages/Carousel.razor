@@ -1,4 +1,5 @@
 ﻿@page "/carousel"
+@inject List<Vehicle> allCars
 
 <PageTitle>Carousel</PageTitle>
 
@@ -8,8 +9,8 @@
 <button @onclick="NextImage">Next</button>
 
 <div class="carousel">
-    @for (var i = 0; i < images.Length; i++) {
-        var path = $"/assets/280SL/{i}.webp";
+    @for (var i = 0; i < carToShow.images.Count; i++) {
+        var path = $"{carToShow.imageFolderPath}{i}.webp";
         <div class="carousel-item @(currentIndex == i ? "active" : "")">
             <img src="@path" alt="Image @i" />
         </div>
@@ -19,17 +20,22 @@
 
 
 @code {
+    public Vehicle carToShow;
     private int index = 0;
     private int currentIndex = 0;
-    private string[] images = new string[] { "0.webp", "1.webp", "2.webp", "3.webp", "4.webp", "5.webp", "6.webp","7.webp","8.webp","9.webp","10.webp" };
+    
+    protected override void OnInitialized()
+    {
+        carToShow = allCars[120];
+    }
 
     private void NextImage()
     {
-        currentIndex = (currentIndex + 1) % images.Length;
+        currentIndex = (currentIndex + 1) % carToShow.images.Count;
     }
 
     private void PreviousImage()
     {
-        currentIndex = (currentIndex - 1 + images.Length) % images.Length;
+        currentIndex = (currentIndex - 1 + carToShow.images.Count) % carToShow.images.Count;
     }
 }

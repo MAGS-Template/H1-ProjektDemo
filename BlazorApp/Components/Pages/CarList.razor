@@ -1,4 +1,6 @@
 ﻿@page "/"
+@using Npgsql
+@inject IConfiguration Configuration
 @inject List<Vehicle> allCars
 
 <PageTitle>Car</PageTitle>
@@ -28,15 +30,18 @@
     public string SelectedColor;
 
     public List<Vehicle> carsToShow;
+    private string connectionString;
 
     protected override void OnInitialized()
     {
+        connectionString = Configuration.GetConnectionString("DefaultConnection");
         carsToShow = allCars;
     }
 
     public void FilterAndUpdateCars()
     {
         carsToShow = FilterColor(allCars, SelectedColor);
+
     }
 
     public List<Vehicle> FilterColor(List<Vehicle> allCars, string colorFilter)

@@ -1,8 +1,40 @@
-﻿
+﻿using Npgsql;
+
 namespace Domain_Models
 {
     public class CreateVehicles
     {
+        public void InsertDummyDataIntoDB(List<Vehicle> AllCars)
+        {
+            var connectionString = "Host=ep-shrill-king-02053617.eu-central-1.aws.neon.tech;Username=Mercantec-MAGS;Password=LyBw7uPTanS6;Database=Bilbasen;sslmode=require\r\n";
+            using var connection = new NpgsqlConnection(connectionString);
+            connection.Open();
+            using (var cmd = new NpgsqlCommand())
+            {
+                cmd.Connection = connection;
+
+                foreach (var vehicle in AllCars)
+                {
+                    if (vehicle is EVCar evCar) {
+                        string insertCommand = $@"
+                            INSERT INTO Vehicles(Brand, Model, Year, Color, Type, NumberOfDoors, ListOfAdditionalEquipment, HorsePower, BatteryCapacity, Range)
+                            VALUES('{evCar.brand}', '{evCar.model}', {evCar.year}, '{evCar.color}', 'EVCar', {evCar.numberOfDoors}, ARRAY['{string.Join("','", evCar.listOfAdditionalEquipment)}'], {evCar.hoursePower}, {evCar.batteryCapacity}, {evCar.range});";
+
+                        cmd.CommandText = insertCommand;
+                        cmd.ExecuteNonQuery();
+                    } else if (vehicle is PetrolCar petrolCar)
+                    {
+                        string insertCommand = $@"
+                            INSERT INTO Vehicles(Brand, Model, Year, Color, Type, NumberOfDoors, ListOfAdditionalEquipment, HorsePower, NumberOfCylinders)
+                            VALUES('{petrolCar.brand}', '{petrolCar.model}', {petrolCar.year}, '{petrolCar.color}', 'PetrolCar', {petrolCar.numberOfDoors}, ARRAY['{string.Join("','", petrolCar.listOfAdditionalEquipment)}'], {petrolCar.hoursePower}, {petrolCar.numberOfCylinders});";
+
+                        cmd.CommandText = insertCommand;
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+
+        }
         public List<Vehicle> CreateListOfCars()
         {
             List<Vehicle> AllCars = new List<Vehicle>();
@@ -907,6 +939,15 @@ namespace Domain_Models
                 numberOfDoors = 2,
                 listOfAdditionalEquipment = new List<string> { "Bugatti Advanced Cockpit", "Bugatti Sky View" },
                 numberOfCylinders = 16
+            });
+
+            AllCars.Add(new PetrolCar("Mercedes", "280 SL", 1969, "White", 170)
+            {
+                numberOfDoors = 2,
+                listOfAdditionalEquipment = new List<string> { "Automatic transmission" },
+                numberOfCylinders = 6,
+                images = new List<string> { "0.webp", "1.webp", "2.webp", "3.webp", "4.webp", "5.webp", "6.webp", "7.webp", "8.webp", "9.webp" },
+                imageFolderPath = "/assets/280SL/"
             });
 
             return AllCars;

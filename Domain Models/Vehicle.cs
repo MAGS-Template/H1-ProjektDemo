@@ -10,6 +10,8 @@
         public int year { get; set; }
         public string color { get;  set; }
         public int hoursePower { get;  set; }
+        public List<string> images { get; set; }
+        public string imageFolderPath { get; set; }
         public Vehicle(string brand, string model, int year, string color, int hoursePower)
         {
             this.Url = $"car/{lastId}";
@@ -80,13 +82,5 @@
 
     }
 
-    public class MotorBike : Vehicle
-    {
-        public int numberOfCylinders { get; set; }
-        public MotorBike(string brand, string model, int year, string color, int hoursePower)
-        : base(brand, model, year, color, hoursePower)
-        {
-        }
-    }
 
 }
