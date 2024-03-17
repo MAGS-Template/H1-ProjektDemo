@@ -6,7 +6,7 @@ namespace Domain_Models
     {
         public void InsertDummyDataIntoDB(List<Vehicle> AllCars)
         {
-            var connectionString = "Host=ep-shrill-king-02053617.eu-central-1.aws.neon.tech;Username=Mercantec-MAGS;Password=LyBw7uPTanS6;Database=Bilbasen;sslmode=require\r\n";
+            string connectionString = "";
             using var connection = new NpgsqlConnection(connectionString);
             connection.Open();
             using (var cmd = new NpgsqlCommand())
