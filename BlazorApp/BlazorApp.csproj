@@ -21,4 +21,11 @@
     <ProjectReference Include="..\Domain Models\Domain Models.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\assets\common\" />
+    <Folder Include="wwwroot\assets\Mercedes280 SL-127\" />
+    <Folder Include="wwwroot\assets\Mercedes280SL-120\" />
+    <Folder Include="wwwroot\assets\TeslaModel 3-247\" />
+  </ItemGroup>
+
 </Project>

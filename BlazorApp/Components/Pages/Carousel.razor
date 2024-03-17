@@ -1,32 +1,35 @@
-﻿@page "/carousel"
-@inject List<Vehicle> allCars
+﻿@page "/carousel/{carId}"
 
 <PageTitle>Carousel</PageTitle>
 
 <h1>Carousel</h1>
-
+@if (carToShow.images != null)
+    {
 <button @onclick="PreviousImage">Previous</button>
 <button @onclick="NextImage">Next</button>
 
 <div class="carousel">
-    @for (var i = 0; i < carToShow.images.Count; i++) {
-        var path = $"{carToShow.imageFolderPath}{i}.webp";
-        <div class="carousel-item @(currentIndex == i ? "active" : "")">
-            <img src="@path" alt="Image @i" />
-        </div>
-
-    }
+    @for (var i = 0; i < carToShow.images.Count; i++)
+        {
+            var path = $"/assets/{carToShow.imageFolderPath}/{carToShow.images[i]}";
+            <div class="carousel-item @(currentIndex == i ? "active" : "")">
+                <img src="@path" alt="Image @i" />
+            </div>
+        }
 </div>
-
+    }
 
 @code {
     public Vehicle carToShow;
+    [Parameter]
+    public string carId { get; set; }
     private int index = 0;
     private int currentIndex = 0;
-    
+
     protected override void OnInitialized()
     {
-        carToShow = allCars[120];
+        int idToFind = Int32.Parse(carId);
+        carToShow = DB.allVehicles.Find(x => x.Id == idToFind);
     }
 
     private void NextImage()

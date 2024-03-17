@@ -1,5 +1,4 @@
 ﻿@page "/"
-@inject List<Vehicle> allCars
 
 <PageTitle>Car</PageTitle>
 
@@ -32,12 +31,12 @@
 
     protected override void OnInitialized()
     {
-        carsToShow = allCars;
+        carsToShow = DB.allVehicles;
     }
 
     public void FilterAndUpdateCars()
     {
-        carsToShow = FilterColor(allCars, SelectedColor);
+        carsToShow = FilterColor(DB.allVehicles, SelectedColor);
 
     }
 

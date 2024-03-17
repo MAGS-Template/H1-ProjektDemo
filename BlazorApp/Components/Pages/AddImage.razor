@@ -1,0 +1,100 @@
+﻿@page "/car/{carId}/addPicture"
+
+<h3>Upload Image</h3>
+
+@if (carToShow is EVCar evCar)
+{
+    <EVCarPage evCar="evCar"> </EVCarPage>
+}
+else if (carToShow is PetrolCar petrolCar)
+{
+    <PetrolCarPage carToShow="petrolCar"> </PetrolCarPage>
+}
+
+<InputFile OnChange="OnInputFileChange" multiple />
+
+@if (uploadResults.Count > 0)
+{
+    <div>
+        <ul>
+            @foreach (var result in uploadResults)
+            {
+                <li>
+                    File: @result.FileName
+                    <br>
+                    @if (result.Uploaded)
+                    {
+                        <span>Stored File Name: @result.StoredFileName</span>
+                    }
+                    else
+                    {
+                        <span>There was an error uploading the file (Error: @result.ErrorCode).</span>
+                    }
+                </li>
+            }
+        </ul>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public string carId { get; set; }
+    public Vehicle carToShow;
+
+    protected override void OnInitialized()
+    {
+        int idToFind = Int32.Parse(carId);
+        carToShow = DB.allVehicles.Find(x => x.Id == idToFind);
+    }
+    private List<UploadResult> uploadResults = new();
+
+    private async Task OnInputFileChange(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file != null)
+        {
+            var newFolder = $"{carToShow.brand}{carToShow.model}-{carToShow.Id}";
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "assets", newFolder);
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+                carToShow.imageFolderPath = newFolder;
+            }
+
+            var fileName = file.Name;
+
+            var filePath = Path.Combine(path, fileName);
+            using (var stream = System.IO.File.Create(filePath))
+            {
+                await file.OpenReadStream().CopyToAsync(stream);
+                if (carToShow.images == null)
+                {
+                    carToShow.images = new List<string>();
+                }
+
+                carToShow.images.Add(fileName);
+
+                if (carToShow is EVCar evCar)
+                {
+                    if (evCar.images[0] == "") { evCar.images.RemoveAt(0); };
+                    DB.UpdateImagesAndPath(evCar);
+                }
+            }
+
+            uploadResults.Add(new UploadResult
+                {
+                    Uploaded = true,
+                    FileName = file.Name,
+                    StoredFileName = fileName
+                });            
+        }
+    }
+
+    public class UploadResult
+    {
+        public bool Uploaded { get; set; }
+        public string? FileName { get; set; }
+        public string? StoredFileName { get; set; }
+        public int ErrorCode { get; set; }
+    }
+}

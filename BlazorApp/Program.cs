@@ -13,8 +13,8 @@ namespace BlazorApp
 
             //GetAllCars from the Postgres DB
             IConfiguration Configuration = builder.Configuration;
-            var connectionString = Configuration.GetConnectionString("DefaultConnection") ?? Environment.GetEnvironmentVariable("DefaultConnection");
-            builder.Services.AddSingleton<List<Vehicle>>(sp => new DatabaseService(connectionString).GetAllVehicles());
+            string connectionString = Configuration.GetConnectionString("DefaultConnection") ?? Environment.GetEnvironmentVariable("DefaultConnection");
+            builder.Services.AddSingleton<DatabaseService>(sp => new DatabaseService(connectionString));
 
 
             // Add services to the container.

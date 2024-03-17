@@ -1,0 +1,121 @@
+﻿@page "/CreateCar"
+@inject NavigationManager Navigation
+@inject IWebHostEnvironment _hostingEnvironment
+
+
+<h3>Sell your car here!</h3>
+<br />
+
+@if (carCreated == false){
+    <h4> What type of car are you planing to sell?</h4>
+<div class="card">
+    <input type="radio" id="electricCar" name="carType" value="Electric Car" @onchange="@(() => selectedCarType = "EVCar")" />
+    <label for="electricCar">Electric Car</label>
+</div>
+<div class="card">
+    <input type="radio" id="petrolCar" name="carType" value="Petrol Car" @onchange="@(() => selectedCarType = "PetrolCar")" />
+    <label for="petrolCar">Petrol Car</label>
+</div>
+
+
+@if (selectedCarType == "EVCar")
+    {
+        <EditForm Model
+        ="@evCar" OnValidSubmit
+        ="HandleValidSubmitEVCar">
+            <div class="form-group">
+            <label for="brand">Brand:</label>
+            <InputText id="brand" @bind-Value="evCar.brand" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label for="model">Model:</label>
+            <InputText id="model" @bind-Value="evCar.model" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label for="year">Year:</label>
+            <InputNumber id="year" @bind-Value="evCar.year" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label for="color">Color:</label>
+            <InputText id="color" @bind-Value="evCar.color" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label for="hoursePower">Horse Power:</label>
+            <InputNumber id="hoursePower" @bind-Value="evCar.hoursePower" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label for="numberOfDoors">Number of Doors:</label>
+            <InputNumber id="numberOfDoors" @bind-Value="evCar.numberOfDoors" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label for="batteryCapacity">Battery Capacity (for EVCar):</label>
+            <InputNumber id="batteryCapacity" @bind-Value="evCar.batteryCapacity" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label for="range">Range (for EVCar):</label>
+            <InputNumber id="range" @bind-Value="evCar.range" class="form-control" />
+        </div><br />
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </EditForm>
+    }
+    else if (selectedCarType == "PetrolCar")
+    {
+
+    }
+
+}
+else
+{
+    <h4> Your @evCar.brand @evCar.model is now for sale - Do you want to add pictures of it, add them here! </h4><br />
+    <label >Car Image:</label>
+}
+
+
+
+@code {
+    private string selectedCarType;
+
+    private bool carCreated = false;
+
+    private EVCar evCar = new EVCar("Tesla", "Model 3", 2020, "Red", 420)
+    {
+            numberOfDoors = 4,
+            listOfAdditionalEquipment = new List<string> { "Virtual Cockpit", "Matrix LED Headlights" },
+            batteryCapacity = 80,
+            range = 320
+     };
+
+    private async Task HandleValidSubmitEVCar()
+    {
+        DB.CreateNewEVCar(evCar);
+        carCreated = true;
+    }
+
+    private async Task OnInputFileChange(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file != null)
+        {
+            await SaveFile(file);
+        }
+    }
+
+    private async Task SaveFile(IBrowserFile file)
+    {
+        var path = Path.Combine(_hostingEnvironment.WebRootPath, "assets", file.Name);
+        using var stream = System.IO.File.Create(path);
+        await file.OpenReadStream().CopyToAsync(stream);
+    }
+
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+        var assetsPath = Path.Combine(env.WebRootPath, "assets");
+        if (!Directory.Exists(assetsPath))
+        {
+            Directory.CreateDirectory(assetsPath);
+        }
+
+    }
+
+}
+

@@ -1,5 +1,4 @@
 ﻿@page "/car1/{carId}"
-@inject List<Vehicle> allCars
 
 <PageTitle>Car @carId</PageTitle>
 
@@ -19,6 +18,7 @@ else if (carToShow is PetrolCar petrolCar)
 
     protected override void OnInitialized()
     {
-        carToShow = allCars[Int32.Parse(carId)];
+        int idToFind = Int32.Parse(carId);
+        carToShow = DB.allVehicles.Find(x => x.Id == idToFind);
     }
 }

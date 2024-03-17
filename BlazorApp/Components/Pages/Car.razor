@@ -6,20 +6,27 @@
 
 <div>
     <hr />
-    <p>This vehicle is from the great brand of <span style="color: red;">@CarToShow.brand</span>.</p>
-    <p>It is their model: <span style="color: red;">@CarToShow.model</span>.</p>
-    <p>Made in the year <span style="color: red;">@CarToShow.year</span>.</p>
-    <p>The <span style="color: red;">@CarToShow.color</span> exterior matches well with its <span style="color: red;">@CarToShow.hoursePower</span> number of horsepowers.</p>
+    <p>This vehicle is from the great brand of <span style="color: red;">@carToShow.brand</span>.</p>
+    <p>It is their model: <span style="color: red;">@carToShow.model</span>.</p>
+    <p>Made in the year <span style="color: red;">@carToShow.year</span>.</p>
+    <p>The <span style="color: red;">@carToShow.color</span> exterior matches well with its <span style="color: red;">@carToShow.hoursePower</span> number of horsepowers.</p>
+    <a href="@carousel"> Go to carousel for this car! </a> <br />
+    <a href="@addPicture"> Go to add for this car! </a>
+
 </div>
 
 @code {
-    List<Vehicle> allCars = new CreateVehicles().CreateListOfCars();
     [Parameter]
     public string carId { get; set; }
-    public Vehicle CarToShow;
+    public Vehicle carToShow;
+    private string carousel;
+    private string addPicture;
 
     protected override void OnInitialized()
     {
-        CarToShow = allCars[Int32.Parse(carId)];
+        int idToFind = Int32.Parse(carId);
+        carToShow = DB.allVehicles.Find(x => x.Id == idToFind);
+        carousel = $"carousel/{carId}";
+        addPicture = $"car/{carId}/addpicture";
     }
 }
